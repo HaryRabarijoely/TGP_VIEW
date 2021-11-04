@@ -4,4 +4,6 @@ class Gossip < ApplicationRecord
   has_many :tags, through: :gossip_tags
   has_many :comments
   has_many :likes
+  validates :title, length: {in: 3..14}
+  validates :content, presence: true
 end
