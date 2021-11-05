@@ -1,13 +1,4 @@
 <% content_for :title, "Gossip" %>
-
-
-
-<% if params[:notice]%>
- <div class="alert alert-success">
-  <strong>Success!</strong> Operation successful
-	</div>
-<% end %>
-
 <!-- Affichage Stylisé du Gossip-->
 <div class ='align-middle text-center'>
 	<div class="card mt-5 ml-5 mr-5" style="height:350px">
@@ -16,8 +7,29 @@
 	    <p class="card-title"><%= @gossip.created_at.strftime("%d/%m/%Y") %></p>
 	    <p class="card-title">A gossip shared by : <%= link_to @gossip.user.first_name, {controller: "users", action: "show", id: @gossip.user.id}%> from : <%= link_to @gossip.user.city.name , {controller: "cities", action: "show", id: @gossip.user.city.id}%></p>
 	    <p class="card-text mb-5"><%= @gossip.content %></p>
+	    <% if is_owner?(@gossip.user.id) %>
 	    <%= link_to "Edit this Gossip", {controller: "gossips", action: "edit", id: @gossip.id}, class: 'btn btn-primary mr-5' %>
 	    <%= link_to 'Destroy', gossip_path(@gossip), class: 'btn btn-danger ml-5', method: :delete%>
+	    <% end %>
+	    <p class="card-title text-info font-italic">
+		    <span >This gossip has <%= @nb_likes%> <%= nb_gossip_likes?(@gossip.id) > 1 ? 'Likes' : 'Like'%></span>
+		    <!-- BOUTON GOSSIP LIKE -->
+	    <% if logged_in? %>
+		    <% if is_gossip_liked?(@gossip.id) %>
+		    <span class="ml-2">
+		    	<%= link_to icon('fas', 'thumbs-up'),{controller: "gossip_likes", action: "destroy", id: @gossip.id}, method: :delete, style: 'color:blue'%>
+		    </span>
+		    <% else %>
+		    <span class= "ml-2 text-danger">
+		    	<%= link_to icon('fas', 'thumbs-up'),{controller: "gossip_likes", method: "new", id: @gossip.id}, method: :post, style: 'color:red'%>
+		    </span>
+		    <% end %>
+		 <%else%>
+		    	<span class="ml-2	"><%=icon('fas', 'thumbs-up')%></span>
+		</p>
+	    <% end %>
+
+	    
 	  </div>
 	</div>
 </div>
@@ -31,13 +43,33 @@
 		<% @comments.each do |comment| %>
 			<div class="col-4 col-sm-4 col-md-4 col-lg-4 mt-5 text-center" style="width: 18rem">
 			  <div class="card-body">
-			    <h5 class="card-title">Comment <fieldset></fieldset>rom : 
-					    <%= link_to comment.user.first_name , users_path(:id => comment.user.id)%></h5>
+			    <h5 class="card-title">Comment from : 
+					    <%= link_to comment.user.first_name , {controller: "users", action: "show", id: comment.user.id}%></h5>
+				<div class="text-info font-italic">
+		   			<span >This comment has <%= nb_comment_likes?(comment.id)%> <%= (nb_comment_likes?(comment.id) > 1)? 'Likes' : 'Like'%></span>
+
+		    		    <!-- BOUTON COMMENT LIKE -->
+		    	    <% if logged_in? %>
+		    		    <% if is_comment_liked?(comment.id) %>
+		    		    <span class="ml-2" id="liked">
+		    		    	<%= link_to icon('fas', 'thumbs-up'),{controller: "comment_likes", action: "destroy", id: comment.id}, method: :delete, style: 'color:blue'%>
+		    		    </span>
+		    		    <% else %>
+		    		    <span class= "ml-2" style="color:blue">
+		    		    	<%= link_to icon('fas', 'thumbs-up'),{controller: "comment_likes", method: "new", id: comment.id}, method: :post, style: 'color:red'%>
+		    		    </span>
+		    		    <% end %>
+		    		 <%else%>
+		    		    	<span class="ml-2	"><%=icon('fas', 'thumbs-up')%></span>
+		    		</div>
+		    	    <% end %>
+				</div>
 				<p class="card-title"><%= comment.created_at.strftime("%d/%m/%Y") %></p>
 			    <p class="card-title"><%= comment.content %></p>
+			    <% if is_owner?(comment.user.id) %>
 			    <%= link_to "Edit this comment", edit_gossip_comment_path(@gossip.id, comment.id), class: 'btn btn-secondary' %>
+			    <% end %>
 			  </div>
-			</div>
 		<%end%>
 	</div>
 </div>

@@ -19,9 +19,25 @@
 			<div class="col-4 col-sm-4 col-md-4 col-lg-4 mt-5 text-center" style="width: 18rem">
 			  <div class="card-body">
 			    <h5 class="card-title"><%= gossip.title %></h5>
-			    <p class="card-title">A gossip from : <%= link_to gossip.user.first_name , users_path(:id => gossip.user.id)%></p>
-			    <%= link_to "See this Gossip", gossips_path(:id => gossip.id), class: 'btn btn-primary' %>
-			  </div>
+			    <p class="card-title">A gossip from : <%= link_to gossip.user.first_name , {controller: "users", action: "show", id: gossip.user.id}%></p>
+			    <div class="mb-2 text-info">
+			        <span >This gossip has <%= nb_gossip_likes?(gossip.id)%> <%= nb_gossip_likes?(gossip.id) > 1 ? 'Likes' : 'Like'%></span>
+			        <% if logged_in? %>
+			    	    <% if is_gossip_liked?(gossip.id) %>
+			    	    <span class="ml-2">
+			    	    	<%= link_to icon('fas', 'thumbs-up'),{controller: "gossip_likes", action: "destroy", id: gossip.id}, method: :delete, style: 'color:blue'%>
+			    	    </span>
+			    	    <% else %>
+			    	    <span class= "ml-2 text-danger">
+			    	    	<%= link_to icon('fas', 'thumbs-up'),{controller: "gossip_likes", method: "new", id: gossip.id}, method: :post, style: 'color:red'%>
+			    	    </span>
+			    	    <% end %>
+			    	 <%else%>
+			    	    	<span class="ml-2	"><%=icon('fas', 'thumbs-up')%></span>
+			    	</div>
+			        <% end %>
+			    </div>
+			    <%= link_to "See this Gossip",{controller: "gossips", action: "show", id: gossip.id}, class: 'btn btn-primary' %>
 			</div>
 		<%end%>
 	</div>

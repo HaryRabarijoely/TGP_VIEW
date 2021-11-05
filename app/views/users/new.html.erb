@@ -1,2 +1,70 @@
-<h1>Users#new</h1>
-<p>Find me in app/views/users/new.html.erb</p>
+<% content_for :title, "Create an Account" %>
+
+
+<% if !@user.nil? && @user.errors.any? %>
+	<div class="alert alert-danger">
+	  <p>We were not able to add your profile for the following reasons :</p>
+	  <ul>
+	    <% @user.errors.full_messages.each do |message| %>
+	      <li><%= message %></li>
+	    <% end %>
+	  </ul>
+	</div>
+<% end %>
+
+
+
+<div class="container register">
+                <div class="row">
+                    <div class="col-md-3 register-left">
+                        <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt=""/>
+                        <h3>Welcome</h3>
+                        <p>Do you already have an Account ?</p>
+                        <%= link_to 'Login to your account', new_session_path, class: 'btn btn-danger '%>
+                    </div>
+                    <div class="col-md-9 register-right">
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <h3 class="register-heading">Create a User Account</h3>
+                                <form action= "<%= users_path %>" method="POST">
+                                <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+                                <div class="row register-form">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="text" name="first_name" class="form-control" placeholder="First Name *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="last_name" class="form-control" placeholder="Last Name *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" name="password" class="form-control" placeholder="Password *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" name="confirmpassword" class="form-control"  placeholder="Confirm Password *" value="" />
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="email" name="email"class="form-control" placeholder="Your Email *" value="" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="age"class="form-control" placeholder="Your Age *" value="" />
+                                        </div>
+                                        <div class="form-group row ml-2">
+                                        	<%= select_tag "city_id", options_from_collection_for_select(@city, "id","name") %>
+                                        	<%= link_to 'Add a city', new_city_path, class: 'btn btn-secondary btn-sm ml-2'%>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="description"class="form-control" placeholder="Enter Your desription *" value="" />
+                                        </div>
+                                        <input type="submit" class="btnRegister"  value="Register"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>

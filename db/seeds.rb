@@ -22,7 +22,8 @@ cities = []
 gossips = []
 tags = []
 messages = []
-likes = []
+clikes = []
+glikes = []
 comments = []
 comments2 = []
 zip_array = [13000,13001,13002,13003,13004,13005,13006,13007,13008,13009,13010,13011,13012,13013,13014,13015,13016]
@@ -44,6 +45,7 @@ nb_user.times do |x|
     last_name: Faker::Name.last_name,
     description: Faker::Lorem.paragraph,
     email: Faker::Internet.email,
+    password: 'azerty',
     age: rand(16..80),
     city_id: cities.sample.id)
   users << user
@@ -120,18 +122,18 @@ end
 
 #seeding des likes vers comments
 nb_likes.times do |x|
-  like = Like.create(
+  like = CommentLike.create(
     user_id: users.sample.id,
     comment_id: comments.sample.id)
-  likes << like
+  clikes << like
   puts "Seeding Random Recipients Recipient to Private messages nb#{x}"
 end
 #seeding des likes vers gossip
 nb_likes.times do |x|
-  like = Like.create(
+  like = GossipLike.create(
     user_id: users.sample.id,
     gossip_id: gossips.sample.id)
-  likes << like
+  glikes << like
   puts "Seeding Random Recipients Recipient to Private messages nb#{x}"
 end
 #seeding comments of comments
